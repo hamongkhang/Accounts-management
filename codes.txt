@@ -1,0 +1,179 @@
+drop database Quan_ly_Cafe;
+create database Quan_ly_Cafe;
+use Quan_ly_Cafe;
+create table Chu_tiem(
+	Chu_tiem_id varchar(10) check(Chu_tiem_id like'D%'),
+    Ten_chu_tiem varchar(100),
+    Tuoi int,
+    Dia_chi varchar(100),
+    Sdt varchar(12),
+    Ten_nha_hang varchar(200),
+    Dia_chi_nha_hang varchar(200),
+    primary key(Chu_tiem_id)
+					);
+	insert into Chu_tiem values('D001','Dang Van Duc',19,'Quang Binh','979395304','Hai Nam','Da Nang');        
+      
+      
+create table Nguoi_quan_ly(
+	Nguoi_quan_ly_id varchar(10) check(Nguoi_quan_ly_id like'Q%'),
+    Ten_nguoi_quan_ly varchar(100),
+    Tuoi int,
+    Dia_chi varchar(100),
+    Sdt varchar(12),
+    Thoi_gian_lam_viec datetime,
+    Chu_tiem_id varchar(10) check(Chu_tiem_id like'D%'),
+    primary key(Nguoi_quan_ly_id),
+    foreign key(Chu_tiem_id) references Chu_tiem(Chu_tiem_id)
+							);
+	insert into Nguoi_quan_ly values('Q001','Nguyen Hung Manh',18,'Quang Binh','067345627','2020-05-10','D001');		
+    insert into Nguoi_quan_ly values('Q002','Ha Mong Khang',18,'Binh Dinh','0396498891','2019-04-12','D001');	                       
+                            
+                            
+create table Khu_vuc (
+	Khu_vuc_id varchar(10) check(Khu_vuc_id like 'K%') ,
+    Ten_khu_vuc varchar(100),
+    Nguoi_quan_ly_id varchar(10) check(Nguoi_quan_ly_id like'Q%'),
+     primary key(Khu_vuc_id),
+    foreign key(Nguoi_quan_ly_id) references Nguoi_quan_ly(Nguoi_quan_ly_id)
+						);
+	insert into Khu_vuc values('K001','Suoi Mo','Q001');	
+    insert into Khu_vuc values('K002','Suoi Tien','Q001');
+    insert into Khu_vuc values('K003','Cap doi','Q002');                    
+                        
+                        
+create table Quan_ly_kho (
+	Quan_ly_kho_id VARCHAR (10) check(Quan_ly_kho_id like 'KHO%'),
+	Nguoi_quan_ly_id varchar(10) check(Nguoi_quan_ly_id like'Q%') ,
+    Nhan_vien_id varchar(10) check(Nhan_vien_id like 'NV%'),
+    Khu_vuc_id varchar(10)  check(Khu_vuc_id like 'K%')  ,
+    Ngay_nhap_kho datetime,
+    San_pham_nhap_vao varchar(500),
+    Ngay_xuat_kho datetime,
+    San_pham_xuat_kho varchar(500),
+    primary key(Quan_ly_kho_id),
+    foreign key(Khu_vuc_id) references Khu_vuc(Khu_vuc_id)
+						);
+     INSERT INTO Quan_ly_kho values('KHO001','Q001','NV001','K001','2020-11-11','Ga','2020-12-11','Ca');     
+     
+     
+create table Quan_ly_bep(
+	Khu_vuc_id varchar(10 )  check(Khu_vuc_id like 'K%') ,
+	Quan_ly_bep_id varchar(10) check(Quan_ly_bep_id like 'BEP%'),
+	Nguoi_quan_ly_id varchar(10)  check(Nguoi_quan_ly_id like'Q%') ,
+    Nhan_vien_id varchar(10) check(Nhan_vien_id like 'NV%'),
+    Mon_id VARCHAR(10) check(Mon_id like 'M%'),
+    primary key(Quan_ly_bep_id),
+    foreign key(Khu_vuc_id) references Khu_vuc(Khu_vuc_id)
+						);
+      INSERT INTO Quan_ly_bep values('K001','BEP001','Q001','NV001','M001');   
+      
+create table Ban(
+	Ban_id VARCHAR(10) check(Ban_id like 'B%'),
+    Khu_vuc_id varchar(10)  check(Khu_vuc_id like 'K%') ,
+    Tinh_trang varchar(50),     
+    Loai_ban varchar(50),
+    primary key(Ban_id),
+    foreign key(Khu_vuc_id) references Khu_vuc(Khu_vuc_id)
+				);
+     insert into Ban values('B001','K001','Binh thuong','Ban tron');    
+     insert into Ban values('B002','K002','Binh thuong','Ban tron'); 
+     insert into Ban values('B003','K003','Gay mot chan','Ban vuong'); 
+                
+create table Nhan_vien(
+	Nhan_vien_id varchar(10) check(Nhan_vien_id like 'NV%'),
+    Ten_nhan_vien varchar(100),
+    Tuoi int,
+    Dia_chi varchar(100),
+    Sdt varchar(12),
+    Thoi_gian_lam_viec datetime,
+    Ban_id  VARCHAR(10) check(Ban_id like 'B%'),
+    PRIMARY KEY(Nhan_vien_id),
+    foreign key(Ban_id) references Ban(Ban_id)
+						);
+    insert into Nhan_vien values('NV001','Nguyen Van Toan',27,'Quang Binh','036476253','2020-05-20','B001');	
+	insert into Nhan_vien values('NV002','Nguyen Thi Hoa',21,'Quang Binh','0364324234','2020-09-20','B001');	
+	insert into Nhan_vien values('NV003','Ho Van Loi',29,'Quang Binh','06433673784','2020-05-11','B002');	
+	insert into Nhan_vien values('NV004','Tran Thi Hien',25,'Quang Binh','07328648232','2020-05-17','B002');	
+	insert into Nhan_vien values('NV005','Nguyen Huu Duc',23,'Quang Binh','0391762371','2020-02-20','B001');	
+	insert into Nhan_vien values('NV006','Nguyen Thi My Nu',19,'Quang Binh','03217863781','2020-01-20','B003');	
+                        
+                        
+                        
+create table Orders (
+	Order_id VARCHAR(10) check(Order_id like 'O%'),
+    Ban_id VARCHAR(10) check(Ban_id like 'B%'),
+	Mon_id VARCHAR(10) check(Mon_id like 'M%'),
+    So_mon int,
+    Dich_vu_id VARCHAR(10) check(Dich_vu_id like 'DV%'),
+    primary key (Order_id),
+    foreign key(Ban_id) references Ban(Ban_id)
+					);
+   insert into Orders values('O001','B001','M001',11,'DV001');  
+
+   
+                    
+                    
+                    
+                    
+create table Menus (
+	Mon_id  VARCHAR(10) check(Mon_id like 'M%'),
+    Loai_mon varchar(50),
+    Ten_mon varchar(100),
+    Gia_tien_mon varchar(100),
+    Dich_vu_id VARCHAR(10) check(Dich_vu_id like 'DV%'),
+    Order_id VARCHAR(10) check(Order_id like 'O%'),
+    PRIMARY KEY(Mon_id),
+    foreign key(Order_id) references Orders(Order_id)
+					);
+	insert into Menus values('M001','Mon man','Thit xao chua ngot','30000','DV001','O001');  
+    
+create table Dich_vu (
+	Dich_vu_id VARCHAR(10) check(Dich_vu_id like 'DV%'),
+    Loai_dich_vu varchar(50),
+    Ten_dich_vu varchar(50),
+    Gia_tien_dich_vu varchar(100),
+    Order_id VARCHAR(10) check(Order_id like 'O%'),
+    PRIMARY KEY(Dich_vu_id),
+    foreign key(Order_id) references Orders(Order_id )
+						);
+     insert into Dich_vu values('DV001','Nuoc dung','Them nuoc tuong','1000d','O001');       
+			
+                        
+create table Hoa_don(
+	Hoa_don_id VARCHAR(10) check(Hoa_don_id like 'H%'),
+    Thoi_gian datetime,
+    Ban_id VARCHAR(10) check(Ban_id like 'B%'),
+    Mon_id VARCHAR(10) check(Mon_id like 'M%'),
+    Ten_mon varchar(100),
+    Gia_tien_mon varchar(100),
+    Dich_vu_id VARCHAR(10) check(Dich_vu_id like 'DV%'),
+    Gia_tien_dich_vu varchar(100),
+    Giam_gia varchar(100),
+    Tong_hoa_don varchar(300),
+    PRIMARY KEY(Hoa_don_id),
+    foreign key(Ban_id) references Ban(Ban_id)
+					);
+     insert into Hoa_don values('H001','2020-06-18','B001','M001','Thit xao chua ngot','30000','DV001','1000','0','30000');               
+    	
+               
+select *
+from Chu_tiem;
+
+select Nguoi_quan_ly_id,Ten_nguoi_quan_ly,Tuoi,Dia_chi,Sdt,Thoi_gian_lam_viec
+from Nguoi_quan_ly 
+where Thoi_gian_lam_viec = '2020-05-10';
+
+select Nhan_vien_id,Ten_nhan_vien,Tuoi,Dia_chi,Sdt,Thoi_gian_lam_viec
+from Nhan_vien
+where Tuoi=29;
+
+select B.Ban_id,K.Ten_khu_vuc,B.Loai_ban,B.Tinh_trang
+from Ban B,Khu_vuc K
+where  K.Khu_vuc_id=B.Khu_vuc_id and B.Loai_ban='Ban tron';
+
+select H.Mon_id,H.Ten_mon,B.Ban_id,B.khu_vuc_id
+from Hoa_don H,Ban B,Orders O
+WHERE O.Ban_id=B.Ban_id and H.Ban_id=B.Ban_id;
+
+
+
